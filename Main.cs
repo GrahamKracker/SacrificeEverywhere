@@ -215,7 +215,7 @@ public class Main : BloonsTD6Mod
         towerModel.range += level / 2f;
         foreach (var item in towerModel.GetDescendants<AttackModel>().ToArray())
         {
-            item.range += level / 2f;
+            item.range += level / 8f;
         }
 
         var weaponRate = 1 - (level / 100);
