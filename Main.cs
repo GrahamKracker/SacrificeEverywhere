@@ -27,6 +27,7 @@ using Il2CppAssets.Scripts.Unity.UI_New.InGame.StoreMenu;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.TowerSelectionMenu;
 using Il2CppAssets.Scripts.Utils;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppNinjaKiwi.Common.ResourceUtils;
 using Il2CppSystem.Linq;
 using MelonLoader;
 using UnityEngine;
@@ -53,7 +54,7 @@ public class Main : BloonsTD6Mod
     }
 
 
-    void addAbility(Tower tower)
+    private static void AddAbility(Tower tower)
     {
         var newtower = tower.towerModel.Duplicate();
         var sacrifice = new AbilityModel("Sacrifice", "Sacrifice", "", 1, 0,
@@ -69,7 +70,7 @@ public class Main : BloonsTD6Mod
 
     public override void OnTowerCreated(Tower tower, Entity target, Model modelToUse)
     {
-        addAbility(tower);
+        AddAbility(tower);
     }
 
 
@@ -96,7 +97,7 @@ public class Main : BloonsTD6Mod
 
             mainTower = ability.tower;
 
-            foreach (var tower in InGame.instance.bridge.GetAllTowers().Where(x =>
+            foreach (var tower in InGame.instance.bridge.GetAllTowers().ToArray().Where(x =>
                          !mainTower.Equals(x.tower) && !x.tower.isSelectionBlocked && !x.Def.isSubTower &&
                          !x.Def.isPowerTower && !x.Def.ignoreTowerForSelection))
             {
@@ -112,7 +113,7 @@ public class Main : BloonsTD6Mod
         }
     }
 
-    static List<(Tower, GameObject)> things = new();
+    static List<(Tower, GameObject)> things = [];
 
     static void CreateThing(TowerToSimulation towerToSimulation)
     {
@@ -178,7 +179,7 @@ public class Main : BloonsTD6Mod
 
     public override void OnTowerUpgraded(Tower tower, string upgradeName, TowerModel newBaseTowerModel)
     {
-        addAbility(tower);
+        AddAbility(tower);
     }
 
     [HarmonyPatch(typeof(TowerSelectionMenu), nameof(TowerSelectionMenu.SelectTower))]
